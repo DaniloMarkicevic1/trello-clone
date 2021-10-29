@@ -1,0 +1,21 @@
+{
+  "name": "trelio-clone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,scss}\"",
+    "watch": "sass --watch styles/style.scss styles/css/css.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaniloMarkicevic1/trelio-clone.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DaniloMarkicevic1/trelio-clone/issues"
+  },
+  "homepage": "https://github.com/DaniloMarkicevic1/trelio-clone#readme"
+}
