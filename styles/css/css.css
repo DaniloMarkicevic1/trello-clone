@@ -1,3 +1,36 @@
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+* body {
+  display: flex;
+  justify-content: center;
+  background-color: chocolate;
+}
+* body .container {
+  background-color: white;
+  display: grid;
+  gap: 30px;
+  grid-template-areas: "one two three four";
+}
+* body .container .card {
+  border: 1px solid black;
+}
+* body .container .one {
+  grid-area: one;
+}
+* body .container .two {
+  grid-area: two;
+}
+* body .container .three {
+  grid-area: three;
+}
+* body .container .four {
+  grid-area: four;
+}
+* body .container p {
+  border: 1px solid black;
+}
 
 /*# sourceMappingURL=css.css.map */
