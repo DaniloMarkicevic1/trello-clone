@@ -4,9 +4,8 @@ const forms = document.querySelectorAll('form');
 const inputs = document.querySelectorAll('.addTask');
 const uList = document.querySelectorAll('.list');
 let target = '';
-// let ar?rays;
 let storedItems;
-
+let dragStartIndex;
 let arrays = [['example1'], ['example2'], ['example3'], ['example4']];
 
 if (!localStorage.getItem('items')) {
@@ -17,6 +16,8 @@ if (!localStorage.getItem('items')) {
 }
 
 uList.forEach((list, i) => {
+    list.addEventListener('drop', dragDrop);
+
     if (localStorage) {
         storedItems = JSON.parse(localStorage.items);
         storedItems[i].forEach((arrayItem, i) => {
@@ -32,11 +33,11 @@ uList.forEach((list, i) => {
 forms.forEach((form, i) => {
     form.addEventListener('submit', function addTask(e) {
         e.preventDefault();
-        uList[i].appendChild(createNewTask(inputs[i].value));
+        let index = uList[i].children.length;
+        uList[i].appendChild(createNewTask(inputs[i].value, index));
         arrays[i].push(inputs[i].value);
         localStorage.setItem('items', JSON.stringify(arrays));
         storedItems = JSON.parse(localStorage.items);
-
         inputs[i].value = '';
     });
 });
@@ -44,7 +45,6 @@ forms.forEach((form, i) => {
 cards.forEach((desc) => {
     desc.setAttribute('draggable', 'true');
     desc.addEventListener('dragover', dragOver);
-    desc.addEventListener('drop', dragDrop);
 });
 
 function createNewTask(item, i) {
@@ -64,48 +64,40 @@ function createNewTask(item, i) {
 
 function dragStart(e) {
     target = this;
-    console.log(this);
+    dragStartIndex = +this.getAttribute('data-index');
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', this);
 }
 
-function dragEnd() {
-    console.log('end');
-}
+function dragEnd() {}
 
 function dragOver(e) {
     e.preventDefault();
-    console.log('over');
 }
 
 function dragEnter(e) {
     e.preventDefault();
-    console.log('enter');
 }
 
-function dragLeave() {
-    console.log('leave');
-}
+function dragLeave() {}
 
 function dragDrop(e) {
-    e.preventDefault();
     console.log('drop');
-    console.log(`this: ${this} -- target: ${target}`);
-    if (target !== this) {
-        console.log(e.target);
-        if (
-            e.target.classList[0] === 'taskDescription' ||
-            e.target.classList[0] === 'card' ||
-            e.target.classList[0] === 'addTask' ||
-            e.target.classList[0] === 'list' ||
-            e.target.classList[0] === 'form'
-        ) {
-            console.log(arrays);
-            console.log(target);
-            this.children[3].childNodes[1].appendChild(target);
-        } else {
-            this.children[3].childNodes[1].insertBefore(target, e.target);
-        }
+    e.preventDefault();
+    const dragEndIndex = +this.getAttribute('data-index');
+    if (this.classList[0] === 'list') {
+        localStorage.setItem('items', JSON.stringify(arrays));
+        storedItems = JSON.parse(localStorage.items);
+        this.appendChild(target, e.target);
     }
-    return false;
+    if (this.getAttribute('data-index')) {
+        localStorage.setItem('items', JSON.stringify(arrays));
+        storedItems = JSON.parse(localStorage.items);
+        this.insertAdjacentElement('beforebegin', target);
+        uList.forEach((list) => {
+            list.childNodes.forEach((li, i) => {
+                li.setAttribute('data-index', i);
+            });
+        });
+    }
 }
