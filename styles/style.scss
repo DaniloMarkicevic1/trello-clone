@@ -13,6 +13,49 @@
             grid-template-areas: 'one two three four';
             .card {
                 border: 1px solid black;
+                .cardName,
+                .cardTitle {
+                    font-weight: bold;
+                    padding: 6px;
+                }
+                .description {
+                    padding: 20px;
+                    color: yellow;
+                    border-radius: 7px;
+                    text-align: center;
+                    background-color: blue;
+                }
+                .taskDescription {
+                    ul {
+                        padding: 10px 0;
+                        li {
+                            background-color: gray;
+                            border: 1px solid yellowgreen;
+                            list-style-type: none;
+                            text-decoration: none;
+                            padding: 10px;
+                            margin: 3px;
+                        }
+                    }
+                    form {
+                        display: flex;
+                        flex-direction: column;
+                        input {
+                            margin: 7px;
+                            padding: 10px;
+                        }
+                        button {
+                            margin: 10px 0;
+                            border-radius: 5px;
+                            align-self: center;
+                            color: white;
+                            width: 100px;
+                            border: 0;
+                            padding: 7px;
+                            background-color: rgb(0, 70, 200);
+                        }
+                    }
+                }
             }
             .one {
                 grid-area: one;
@@ -25,9 +68,6 @@
             }
             .four {
                 grid-area: four;
-            }
-            p {
-                border: 1px solid black;
             }
         }
     }

@@ -17,6 +17,47 @@
 * body .container .card {
   border: 1px solid black;
 }
+* body .container .card .cardName,
+* body .container .card .cardTitle {
+  font-weight: bold;
+  padding: 6px;
+}
+* body .container .card .description {
+  padding: 20px;
+  color: yellow;
+  border-radius: 7px;
+  text-align: center;
+  background-color: blue;
+}
+* body .container .card .taskDescription ul {
+  padding: 10px 0;
+}
+* body .container .card .taskDescription ul li {
+  background-color: gray;
+  border: 1px solid yellowgreen;
+  list-style-type: none;
+  text-decoration: none;
+  padding: 10px;
+  margin: 3px;
+}
+* body .container .card .taskDescription form {
+  display: flex;
+  flex-direction: column;
+}
+* body .container .card .taskDescription form input {
+  margin: 7px;
+  padding: 10px;
+}
+* body .container .card .taskDescription form button {
+  margin: 10px 0;
+  border-radius: 5px;
+  align-self: center;
+  color: white;
+  width: 100px;
+  border: 0;
+  padding: 7px;
+  background-color: #0046c8;
+}
 * body .container .one {
   grid-area: one;
 }
@@ -28,9 +69,6 @@
 }
 * body .container .four {
   grid-area: four;
-}
-* body .container p {
-  border: 1px solid black;
 }
 
 /*# sourceMappingURL=css.css.map */
