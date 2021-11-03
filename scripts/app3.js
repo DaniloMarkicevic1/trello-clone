@@ -6,16 +6,27 @@ let target = '';
 let storedItems;
 let dragStartIndex;
 let arrayStartIndex;
-let arrays = [['example1'], ['example2'], ['example3'], ['example4']];
-
-// if (!localStorage.getItem('items')) {
-//     localStorage.setItem('items', JSON.stringify(arrays));
-// } else {
-//     storedItems = JSON.parse(localStorage.items);
-//     arrays = storedItems;
-// }
+let arrays = [
+    [
+        `<li>example1</li>`,
+        `<li>2</li>`,
+        `<li>3</li>`,
+        `<li>4</li>`,
+        `<li>5</li>`,
+    ],
+    [
+        `<li>example2</li>`,
+        `<li>2</li>`,
+        `<li>3</li>`,
+        `<li>4</li>`,
+        `<li>5</li>`,
+    ],
+    [`<li>example3</li>`],
+    [`<li>example4</li>`],
+];
 
 makeLists();
+setAttributes();
 
 function makeLists() {
     uList.forEach((list, i) => {
@@ -23,50 +34,40 @@ function makeLists() {
         list.setAttribute('data-index', i);
         list.addEventListener('dragover', dragOver);
         list.addEventListener('drop', dragDrop);
-
-        arrays[i].map((item, i) => {
-            let listItem = createNewTask(item, i);
-            list.appendChild(listItem);
+        let helpList = '';
+        arrays[i].map((item) => {
+            helpList += item;
         });
+        list.innerHTML = helpList;
     });
 }
 
+function setAttributes() {
+    uList.forEach((list, i) => {
+        list.childNodes.forEach((li, i) => {
+            li.setAttribute('draggable', 'true');
+            li.setAttribute('data-index', i);
+            li.addEventListener('dragstart', dragStart);
+        });
+    });
+}
 forms.forEach((form, i) => {
     // Adding Task
     form.addEventListener('submit', function addTask(e) {
         e.preventDefault();
-        let index = uList[i].children.length;
-        uList[i].appendChild(createNewTask(inputs[i].value, index));
-        arrays[i].push(inputs[i].value);
-        // setLocalStorage();
+        uList[i].innerHTML += `<li>${inputs[i].value}</li>`;
+        arrays[i].push(`<li>${inputs[i].value}</li>`);
+
+        setAttributes();
         inputs[i].value = '';
+        console.log(arrays);
     });
 });
-
-// function setLocalStorage() {
-//     localStorage.setItem('items', JSON.stringify(arrays));
-//     storedItems = JSON.parse(localStorage.items);
-//     arrays = storedItems;
-// }
-//Create new Task, Item
-function createNewTask(item, i) {
-    let newItem = document.createElement('li');
-    newItem.textContent = item;
-    newItem.setAttribute('draggable', 'true');
-    newItem.setAttribute('data-index', `${i}`);
-    newItem.addEventListener('dragstart', dragStart);
-    newItem.addEventListener('dragend', dragEnd);
-    newItem.addEventListener('dragover', dragOver);
-    newItem.addEventListener('dragenter', dragEnter);
-    newItem.addEventListener('dragleave', dragLeave);
-    newItem.addEventListener('dropover', dragOver);
-    return newItem;
-}
 
 function dragStart(e) {
     target = this;
     arrayStartIndex = +this.parentElement.getAttribute('data-index');
-    dragStartIndex = +this.getAttribute('data-index');
+    dragStartIndex = +this.closest('li').getAttribute('data-index');
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', this);
 }
@@ -86,14 +87,16 @@ function dragLeave() {}
 function dragDrop(e) {
     e.preventDefault();
     //Item Index
-    const dragEndIndex = +this.getAttribute('data-index');
+    const dragEndIndex = +e.target.closest('li').getAttribute('data-index');
     // List Array Index
     const arrayEndIndex = +this.getAttribute('data-index');
-    console.log(e.target);
     if (e.target.classList[0] === 'list') {
         uList[arrayEndIndex].appendChild(
             uList[arrayStartIndex].childNodes[dragStartIndex]
         );
+        setAttributes();
+        console.log(arrays);
+
         return;
     }
     if (e.target.classList !== 'list') {
@@ -107,14 +110,15 @@ function dragDrop(e) {
 
         // Remove Item from clicked List
         removeItem(arrayStartIndex, dragStartIndex);
+        setAttributes();
+
         // setLocalStorage();
-        uList.forEach((list) => {
-            list.childNodes.forEach((li, i) => {
-                li.setAttribute('data-index', i);
-            });
-        });
+        console.log(arrays);
+
         return;
     }
+    console.log(arrays);
+
     return;
 }
 
@@ -124,7 +128,6 @@ function addItemToTarget(
     dragStartIndex,
     dragEndIndex
 ) {
-    console.log(arrayStartIndex, arrayEndIndex);
     arrays[arrayEndIndex].splice(
         dragEndIndex,
         0,
@@ -135,8 +138,22 @@ function addItemToTarget(
             uList[arrayStartIndex].childNodes[dragStartIndex]
         );
     } else {
+        arrays[arrayEndIndex].splice(
+            dragEndIndex,
+            0,
+            arrays[arrayStartIndex][dragStartIndex]
+        );
+
+        arrays[arrayEndIndex].splice(
+            dragEndIndex,
+            0,
+            arrays[arrayStartIndex][dragEndIndex]
+        );
     }
 }
 function removeItem(arrayStart, dragStart) {
     arrays[arrayStart].splice(dragStart, 1);
+}
+function swapItems(start, dragStart, dragEnd) {
+    setAttributes();
 }
