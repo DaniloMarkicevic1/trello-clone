@@ -1,82 +1,148 @@
 const forms = document.querySelectorAll('form');
 const inputs = document.querySelectorAll('.addTask');
-const uList = document.querySelector('.list');
+const uList = document.querySelectorAll('.list');
 let dragStartIndex;
 let arrayStartIndex;
+let storedList;
+const taskList = [
+    [`1`, `2`, `3`, `4`, `5`],
+    [`6`, `7`, `8`, `9`, `10`],
+    [`11`, `12`, `13`, `14`, `15`],
+    [`16`, `17`, `18`, `19`, `20`],
+];
 
-const taskList = [`example1`, `2`, `3`, `4`, `5`];
-
-const listItems = [];
-uList.addEventListener('dragstart', dragStart);
-
+const listItems = [[], [], [], []];
 makeLists();
-// setAttributes();
+setEventListeners();
+setAttributes();
 
-function makeLists() {
-    [...taskList].forEach((task, i) => {
-        const listItem = document.createElement('li');
-        listItem.setAttribute('data-index', i);
-        listItem.innerHTML = `${task}`;
-        listItems.push(listItem);
-        uList.appendChild(listItem);
-    });
-    setAttributes();
-}
-
-function setAttributes() {
-    uList.childNodes.forEach((li, i) => {
-        li.setAttribute('draggable', 'true');
-        li.setAttribute('data-index', i);
-        li.setAttribute('class', 'draggables');
-        li.addEventListener('drop', dragDrop);
-        li.addEventListener('dragover', dragOver);
-        // li.addEventListener('dragenter', dragEnter);
-        li.addEventListener('drop', dragDrop);
-        // li.addEventListener('dragleave', dragLeave);
-    });
-}
 forms.forEach((form, i) => {
     // Adding Task
     form.addEventListener('submit', function addTask(e) {
         e.preventDefault();
+        const listItem = document.createElement('li');
+        const index = listItems[i].length;
+        listItem.setAttribute('data-index', index);
+        listItem.innerHTML = `<div class="draggable" draggable="true">${inputs[i].value}</div>`;
+        listItems[i].push(listItem);
+        uList[i].appendChild(listItem);
+        storedList[i].push(inputs[i].value);
+        inputs[i].value = '';
+        localStorage.setItem('taskList', JSON.stringify(storedList));
+        console.log(storedList[i]);
+        setAttributes();
     });
 });
 
-function dragStart(e) {
-    // dragStartIndex = this.closest('li').getAttribute('data-index');
-    dragStartIndex = +e.target.getAttribute('data-index');
+function fillLists(items) {
+    items.forEach((innerList, index) => {
+        innerList.forEach((task, i) => {
+            const listItem = document.createElement('li');
+            listItem.setAttribute('data-index', i);
+            listItem.innerHTML = `<div class="draggable" draggable="true">${task}</div>`;
+            listItems[index].push(listItem);
+            uList[index].appendChild(listItem);
+        });
+    });
+}
 
-    console.log(dragStartIndex);
+function makeLists() {
+    if (localStorage.getItem('taskList')) {
+        storedList = JSON.parse(localStorage.taskList);
+        localStorage.setItem('taskList', JSON.stringify(storedList));
+        fillLists(storedList);
+    } else {
+        fillLists([...taskList]);
+        localStorage.setItem('taskList', JSON.stringify(taskList));
+        storedList = JSON.parse(localStorage.taskList);
+    }
+}
+
+function setAttributes() {
+    uList.forEach((list, i) => {
+        list.setAttribute('data-index', i);
+        list.addEventListener('dragstart', dragStart);
+        list.childNodes.forEach((li, i) => {
+            li.setAttribute('data-index', i);
+            li.setAttribute('class', 'draggables');
+        });
+    });
+}
+
+function setEventListeners() {
+    uList.forEach((list) => {
+        list.addEventListener('dragover', dragOver);
+        list.childNodes.forEach((li, i) => {
+            li.addEventListener('drop', dragDrop);
+            li.addEventListener('dragover', dragOver);
+        });
+    });
+}
+
+function dragStart(e) {
+    listStartIndex = +this.getAttribute('data-index');
+    dragStartIndex = +e.target.closest('li').getAttribute('data-index');
 }
 
 function dragEnd() {}
 
 function dragOver(e) {
     e.preventDefault();
-    console.log('DragOver');
 }
 
 function dragEnter(e) {
     e.preventDefault();
-    console.log('DragEnter');
 }
 
-function dragLeave() {
-    console.log('dragLeave');
-}
+function dragLeave() {}
 
 function dragDrop(e) {
     e.preventDefault();
+    console.log(e.target);
     const dragEndIndex = +this.getAttribute('data-index');
-    swapItems(dragStartIndex, dragEndIndex);
+    const listEndIndex = +this.parentElement.getAttribute('data-index');
+    swapItems(dragStartIndex, dragEndIndex, listStartIndex, listEndIndex);
+    setAttributes();
+    setEventListeners();
+    localStorage.setItem('taskList', JSON.stringify(storedList));
 }
-function swapItems(fromIndex, toIndex) {
-    console.log(listItems[fromIndex]);
-    console.log(listItems[toIndex]);
 
-    const itemOne = listItems[fromIndex];
-    const itemTwo = listItems[toIndex];
-    console.log(itemOne, itemTwo);
-    uList.insertBefore(itemTwo, uList.children[fromIndex]);
-    uList.insertBefore(itemOne, uList.children[toIndex]);
+function swapItems(fromIndex, toIndex, startIndex, endIndex) {
+    // Swap items in a list
+    if (startIndex === endIndex) {
+        let itemOne =
+            listItems[startIndex][fromIndex].querySelector('.draggable');
+        let itemTwo = listItems[endIndex][toIndex].querySelector('.draggable');
+        let storedItem = listItems[endIndex][toIndex].appendChild(itemOne);
+        listItems[startIndex][fromIndex].appendChild(itemTwo);
+        //Local Storage Swap
+        [storedList[startIndex][fromIndex], storedList[startIndex][toIndex]] = [
+            storedList[startIndex][toIndex],
+            storedList[startIndex][fromIndex],
+        ];
+    }
+    // Move item to another list
+    if (startIndex !== endIndex) {
+        listItems[endIndex].splice(
+            toIndex,
+            0,
+            listItems[startIndex][fromIndex]
+        );
+        listItems[startIndex].splice(fromIndex, 1);
+        // Local Storage List
+        storedList[endIndex].splice(
+            toIndex,
+            0,
+            storedList[startIndex][fromIndex]
+        );
+
+        storedList[startIndex].splice(fromIndex, 1);
+        // Change position of Item
+        let listItem = uList[startIndex].childNodes[fromIndex];
+        uList[endIndex].insertBefore(
+            listItem,
+            uList[endIndex].childNodes[toIndex]
+        );
+    }
+    localStorage.setItem('taskList', JSON.stringify(storedList));
 }
