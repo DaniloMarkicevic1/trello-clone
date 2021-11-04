@@ -154,6 +154,15 @@ function addItemToTarget(
 function removeItem(arrayStart, dragStart) {
     arrays[arrayStart].splice(dragStart, 1);
 }
-function swapItems(start, dragStart, dragEnd) {
+
+function swapItems(fromIndex, toIndex) {
+    console.log(listItems[fromIndex]);
+    console.log(listItems[toIndex]);
+
+    const itemOne = listItems[fromIndex];
+    const itemTwo = listItems[toIndex];
+    console.log(itemOne, itemTwo);
+    uList.insertBefore(itemTwo, uList.children[fromIndex]);
+    uList.insertBefore(itemOne, uList.children[toIndex]);
     setAttributes();
 }
