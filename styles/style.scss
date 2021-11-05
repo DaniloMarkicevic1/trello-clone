@@ -1,0 +1,93 @@
+@use './variables' as *;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    body {
+        display: flex;
+        justify-content: center;
+        background-color: map-get($color, lightBlue);
+        .container {
+            background-color: map-get($color, white);
+            display: grid;
+            grid-template-areas:
+                'one'
+                'two'
+                'three'
+                'four';
+            gap: 30px;
+            background-color: map-get($color, lightBlue);
+            @media screen and (min-width: 600px) {
+                grid-template-areas: 'one two ' 'three four';
+            }
+
+            @media screen and (min-width: 1000px) {
+                grid-template-areas: 'one two three four';
+            }
+            .card {
+                background-color: map-get($color, white);
+                border: map-get($border, one);
+                .cardName,
+                .cardTitle {
+                    font-weight: bold;
+                    padding: 6px;
+                }
+                .description {
+                    padding: 20px;
+                    color: map-get($color, white);
+                    border-radius: 7px;
+                    text-align: center;
+                    background-color: map-get($color, blue);
+                }
+                .taskDescription {
+                    ul {
+                        padding: 10px 0;
+                        li {
+                            background-color: map-get($color, darkRed);
+                            border: map-get($border, two);
+                            list-style-type: none;
+                            text-decoration: none;
+                            padding: 10px;
+                            margin: 3px;
+                            div {
+                                color: map-get($color, white);
+                                width: 100%;
+                            }
+                        }
+                    }
+                    form {
+                        display: flex;
+                        flex-direction: column;
+                        input {
+                            margin: 7px;
+                            padding: 10px;
+                        }
+                        button {
+                            margin: 10px 0;
+                            border-radius: 5px;
+                            align-self: center;
+                            color: map-get($color, white);
+                            width: 100px;
+                            border: 0;
+                            padding: 7px;
+                            background-color: map-get($color, button);
+                        }
+                    }
+                }
+            }
+            .one {
+                grid-area: one;
+            }
+            .two {
+                grid-area: two;
+            }
+            .three {
+                grid-area: three;
+            }
+            .four {
+                grid-area: four;
+            }
+        }
+    }
+}

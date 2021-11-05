@@ -1,0 +1,90 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+* body {
+  display: flex;
+  justify-content: center;
+  background-color: #2f7ef5;
+}
+* body .container {
+  background-color: #fff;
+  display: grid;
+  grid-template-areas: "one" "two" "three" "four";
+  gap: 30px;
+  background-color: #2f7ef5;
+}
+@media screen and (min-width: 600px) {
+  * body .container {
+    grid-template-areas: "one two " "three four";
+  }
+}
+@media screen and (min-width: 1000px) {
+  * body .container {
+    grid-template-areas: "one two three four";
+  }
+}
+* body .container .card {
+  background-color: #fff;
+  border: 1px solid black;
+}
+* body .container .card .cardName,
+* body .container .card .cardTitle {
+  font-weight: bold;
+  padding: 6px;
+}
+* body .container .card .description {
+  padding: 20px;
+  color: #fff;
+  border-radius: 7px;
+  text-align: center;
+  background-color: #1901a1;
+}
+* body .container .card .taskDescription ul {
+  padding: 10px 0;
+}
+* body .container .card .taskDescription ul li {
+  background-color: #700808;
+  border: 1px solid yellowgreen;
+  list-style-type: none;
+  text-decoration: none;
+  padding: 10px;
+  margin: 3px;
+}
+* body .container .card .taskDescription ul li div {
+  color: #fff;
+  width: 100%;
+}
+* body .container .card .taskDescription form {
+  display: flex;
+  flex-direction: column;
+}
+* body .container .card .taskDescription form input {
+  margin: 7px;
+  padding: 10px;
+}
+* body .container .card .taskDescription form button {
+  margin: 10px 0;
+  border-radius: 5px;
+  align-self: center;
+  color: #fff;
+  width: 100px;
+  border: 0;
+  padding: 7px;
+  background-color: #3838cf;
+}
+* body .container .one {
+  grid-area: one;
+}
+* body .container .two {
+  grid-area: two;
+}
+* body .container .three {
+  grid-area: three;
+}
+* body .container .four {
+  grid-area: four;
+}
+
+/*# sourceMappingURL=css.css.map */
