@@ -20,17 +20,21 @@ forms.forEach((form, i) => {
     // Adding Task
     form.addEventListener('submit', function addTask(e) {
         e.preventDefault();
-        const listItem = document.createElement('li');
-        const index = listItems[i].length;
-        listItem.setAttribute('data-index', index);
-        listItem.innerHTML = `<div class="draggable" draggable="true">${inputs[i].value}</div>`;
-        listItems[i].push(listItem);
-        uList[i].appendChild(listItem);
-        storedList[i].push(inputs[i].value);
-        inputs[i].value = '';
-        localStorage.setItem('taskList', JSON.stringify(storedList));
-        console.log(storedList[i]);
-        setAttributes();
+        if (inputs[i].value === '') {
+            return;
+        } else {
+            const listItem = document.createElement('li');
+            const index = listItems[i].length;
+            listItem.setAttribute('data-index', index);
+            listItem.innerHTML = `<div class="draggable" draggable="true">${inputs[i].value}</div>`;
+            listItems[i].push(listItem);
+            uList[i].appendChild(listItem);
+            storedList[i].push(inputs[i].value);
+            inputs[i].value = '';
+            localStorage.setItem('taskList', JSON.stringify(storedList));
+            console.log(storedList[i]);
+            setAttributes();
+        }
     });
 });
 
@@ -61,7 +65,6 @@ function makeLists() {
 function setAttributes() {
     uList.forEach((list, i) => {
         list.setAttribute('data-index', i);
-        list.addEventListener('dragstart', dragStart);
         list.childNodes.forEach((li, i) => {
             li.setAttribute('data-index', i);
             li.setAttribute('class', 'draggables');
@@ -71,6 +74,7 @@ function setAttributes() {
 
 function setEventListeners() {
     uList.forEach((list) => {
+        list.addEventListener('dragstart', dragStart);
         list.addEventListener('dragover', dragOver);
         list.childNodes.forEach((li, i) => {
             li.addEventListener('drop', dragDrop);
@@ -108,13 +112,14 @@ function dragDrop(e) {
 }
 
 function swapItems(fromIndex, toIndex, startIndex, endIndex) {
-    // Swap items in a list
     if (startIndex === endIndex) {
+        // Swap items in a list
         let itemOne =
             listItems[startIndex][fromIndex].querySelector('.draggable');
         let itemTwo = listItems[endIndex][toIndex].querySelector('.draggable');
         let storedItem = listItems[endIndex][toIndex].appendChild(itemOne);
         listItems[startIndex][fromIndex].appendChild(itemTwo);
+
         //Local Storage Swap
         [storedList[startIndex][fromIndex], storedList[startIndex][toIndex]] = [
             storedList[startIndex][toIndex],
@@ -129,14 +134,15 @@ function swapItems(fromIndex, toIndex, startIndex, endIndex) {
             listItems[startIndex][fromIndex]
         );
         listItems[startIndex].splice(fromIndex, 1);
+
         // Local Storage List
         storedList[endIndex].splice(
             toIndex,
             0,
             storedList[startIndex][fromIndex]
         );
-
         storedList[startIndex].splice(fromIndex, 1);
+
         // Change position of Item
         let listItem = uList[startIndex].childNodes[fromIndex];
         uList[endIndex].insertBefore(
@@ -144,5 +150,6 @@ function swapItems(fromIndex, toIndex, startIndex, endIndex) {
             uList[endIndex].childNodes[toIndex]
         );
     }
+    // Set local storage to new list arrangement
     localStorage.setItem('taskList', JSON.stringify(storedList));
 }

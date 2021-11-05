@@ -1,3 +1,5 @@
+@use './variables' as *;
+
 * {
     margin: 0;
     padding: 0;
@@ -5,14 +7,27 @@
     body {
         display: flex;
         justify-content: center;
-        background-color: chocolate;
+        background-color: map-get($color, lightBlue);
         .container {
-            background-color: white;
+            background-color: map-get($color, white);
             display: grid;
+            grid-template-areas:
+                'one'
+                'two'
+                'three'
+                'four';
             gap: 30px;
-            grid-template-areas: 'one two three four';
+            background-color: map-get($color, lightBlue);
+            @media screen and (min-width: 600px) {
+                grid-template-areas: 'one two ' 'three four';
+            }
+
+            @media screen and (min-width: 1000px) {
+                grid-template-areas: 'one two three four';
+            }
             .card {
-                border: 1px solid black;
+                background-color: map-get($color, white);
+                border: map-get($border, one);
                 .cardName,
                 .cardTitle {
                     font-weight: bold;
@@ -20,21 +35,26 @@
                 }
                 .description {
                     padding: 20px;
-                    color: yellow;
+                    color: map-get($color, white);
                     border-radius: 7px;
                     text-align: center;
-                    background-color: blue;
+                    background-color: map-get($color, blue);
                 }
                 .taskDescription {
                     ul {
                         padding: 10px 0;
                         li {
-                            background-color: gray;
-                            border: 1px solid yellowgreen;
+                            background-color: map-get($color, darkRed);
+                            border: map-get($border, two);
                             list-style-type: none;
                             text-decoration: none;
                             padding: 10px;
                             margin: 3px;
+                            div {
+                                color: map-get($color, white);
+                                height: 15px;
+                                width: 100%;
+                            }
                         }
                     }
                     form {
@@ -48,11 +68,11 @@
                             margin: 10px 0;
                             border-radius: 5px;
                             align-self: center;
-                            color: white;
+                            color: map-get($color, white);
                             width: 100px;
                             border: 0;
                             padding: 7px;
-                            background-color: rgb(0, 70, 200);
+                            background-color: map-get($color, button);
                         }
                     }
                 }
